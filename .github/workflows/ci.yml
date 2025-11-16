@@ -2,26 +2,140 @@ name: CI
 
 on:
   push:
+    branches: [ main, master ]
   pull_request:
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
-  ci:
-    name: CI
-    uses: silverstripe/gha-ci/.github/workflows/ci.yml@v1
-    with:
-      dynamic_matrix: false
-      extra_jobs: |
-        - php: '8.1'
-          db: mysql80
-          phpunit: true
-          installer_version: ^4
-        - php: '8.2'
-          db: mysql80
-          phpunit: true
-          installer_version: ^5
-        - php: '8.2'
-          db: mariadb
-          phpunit: true
-          installer_version: ^5
+  test:
+    name: Test (PHP ${{ matrix.php }} | SS ${{ matrix.silverstripe }})
+    runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # SilverStripe 5
+          - php: '8.1'
+            silverstripe: '~5.0'
+          - php: '8.2'
+            silverstripe: '~5.0'
+          - php: '8.3'
+            silverstripe: '~5.0'
+
+          # SilverStripe 4
+          - php: '8.1'
+            silverstripe: '^4.13'
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: intl, mbstring, json, mysql, pdo_mysql
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: |
+          composer require silverstripe/framework:${{ matrix.silverstripe }} --no-update
+          composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHPUnit tests
+        env:
+          SS_DATABASE_CLASS: MySQLDatabase
+          SS_DATABASE_SERVER: 127.0.0.1
+          SS_DATABASE_USERNAME: root
+          SS_DATABASE_PASSWORD: ''
+          SS_DATABASE_NAME: test_db
+        run: vendor/bin/phpunit --coverage-clover coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  phpstan:
+    name: PHPStan Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: intl, mbstring, json
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --error-format=github
+
+  code-style:
+    name: Code Style
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHP_CodeSniffer
+        run: vendor/bin/phpcs src tests --standard=phpcs.xml.dist
+
+  lint:
+    name: Lint PHP Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Lint PHP files
+        run: find src tests -name "*.php" -print0 | xargs -0 -n1 php -l

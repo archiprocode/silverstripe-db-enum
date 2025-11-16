@@ -1,3 +1,8 @@
 ---
 Name: archipro-silverstripe-db-enum
 ---
+# Automatically apply SmartFieldsExtension to all DataObjects
+# This provides automatic type casting for DBJson, DBSmartEnum, and DBSmartDatetime fields
+SilverStripe\ORM\DataObject:
+  extensions:
+    - ArchiPro\Silverstripe\DBEnum\SmartFieldsExtension

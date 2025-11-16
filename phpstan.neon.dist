@@ -1,3 +1,6 @@
+includes:
+  - vendor/cambis/silverstan/configuration.neon
+
 parameters:
   level: 8
   paths:
@@ -6,13 +9,3 @@ parameters:
   checkMissingIterableValueType: true
   checkGenericClassInNonGenericObjectType: true
   reportUnmatchedIgnoredErrors: true
-
-  # Ignore SilverStripe framework specific issues
-  ignoreErrors:
-    # SilverStripe's DBField magic methods
-    - '#Access to an undefined property SilverStripe\\ORM\\FieldType\\DBField::\$value#'
-    - '#Access to an undefined property SilverStripe\\ORM\\FieldType\\DBField::\$isChanged#'
-
-  # Type hints for better analysis
-  stubFiles:
-    # Add any stub files here if needed

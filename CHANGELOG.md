@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Automatically casts DBSmartDatetime fields to/from various formats
 
 - **Comprehensive test suite** with 100% code coverage
-- **PHPStan level 8** static analysis configuration
+- **PHPStan level 8** static analysis configuration with [silverstan](https://github.com/Cambis/silverstan) for SilverStripe-specific type checking
 - **Full documentation** with examples and API reference
 - **GitHub Actions CI pipeline** with:
   - Multi-version PHP testing (8.1, 8.2, 8.3)

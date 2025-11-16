@@ -307,7 +307,7 @@ Run tests with:
 vendor/bin/phpunit
 ```
 
-Run PHPStan analysis:
+Run PHPStan analysis (with SilverStripe-specific rules via [silverstan](https://github.com/Cambis/silverstan)):
 
 ```bash
 vendor/bin/phpstan analyse

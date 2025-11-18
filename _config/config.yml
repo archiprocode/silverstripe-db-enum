@@ -7,6 +7,8 @@ after:
 SilverStripe\Core\Injector\Injector:
   MySQLSchemaManager:
     class: ArchiPro\Silverstripe\DBEnum\MySQL8SchemaManager
+  SmartEnum:
+    class: ArchiPro\Silverstripe\DBEnum\DBSmartEnum
 
 # Automatically apply SmartFieldsExtension to all DataObjects
 # This provides automatic type casting for DBJson, DBSmartEnum, and DBSmartDatetime fields

@@ -135,14 +135,14 @@ class DBSmartDatetime extends DBDatetime
      * Format the datetime using a custom format string.
      *
      * @param string $format PHP date format string
-     * @return string|null
+     * @return ?string The date in the requested format
      */
-    public function format(string $format): ?string
+    public function Format($format)
     {
         $dateTime = $this->getDateTime();
 
         if ($dateTime === null) {
-            return null;
+            return '';
         }
 
         return $dateTime->format($format);

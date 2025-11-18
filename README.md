@@ -196,6 +196,39 @@ if ($product->Settings->exists()) {
 }
 ```
 
+### Filtering JSON Data
+
+Use the `Json` filter to search through JSON columns using MySQL's native `JSON_CONTAINS` function:
+
+```php
+// Find objects where a specific field matches a value
+$list = Product::get()->filter('Settings:Json', ['$.author' => 'John Doe']);
+
+// Find objects where nested JSON data matches
+$list = Product::get()->filter('Settings:Json', [
+    '$.meta' => ['title' => 'My Product', 'category' => 'Electronics']
+]);
+
+// Exclude objects with specific JSON values
+$list = Product::get()->filter('Settings:Json:not', ['$.status' => 'archived']);
+```
+
+For more complex queries, use MySQL's JSON functions directly:
+
+```php
+// Extract and compare JSON values
+$list = Product::get()->where([
+    'JSON_EXTRACT("Settings", ?) > ?' => ['$.price', 100],
+]);
+
+// Check if a JSON path exists
+$list = Product::get()->where([
+    'JSON_CONTAINS_PATH("Settings", "one", ?)' => ['$.featured'],
+]);
+```
+
+See [MySQL JSON Functions](https://dev.mysql.com/doc/refman/8.4/en/json-search-functions.html) for more information.
+
 ### DBSmartEnum with Custom Labels
 
 ```php
@@ -278,6 +311,35 @@ class Article extends DataObject
         return $this->setField('Status', $status->value);
     }
 }
+```
+
+## MySQL 8 Schema Manager
+
+The module automatically registers a MySQL8SchemaManager that enables native JSON column support. This is required for DBJson fields to work correctly.
+
+If you have a custom MySQLSchemaManager, you can add JSON support by including the trait:
+
+```php
+use ArchiPro\Silverstripe\DBEnum\JsonDatabaseFieldDefinition;
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
+
+class MyCustomSchemaManager extends MySQLSchemaManager
+{
+    use JsonDatabaseFieldDefinition;
+}
+```
+
+Then register it in your config (make sure it loads after this module):
+
+```yaml
+---
+Name: my-custom-schema-manager
+after:
+  - archipro-silverstripe-db-enum
+---
+SilverStripe\Core\Injector\Injector:
+  MySQLSchemaManager:
+    class: App\Project\MyCustomSchemaManager
 ```
 
 ## Configuration

@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `getValue()` returns arrays
   - Helper methods: `getKey()`, `setKey()`, `removeKey()`, `hasKey()`, `exists()`
   - Automatic JSON encoding/decoding
+  - **JsonFilter**: Search JSON columns using MySQL's `JSON_CONTAINS` function
+    - Filter by JSON path expressions (e.g., `'$.meta.author'`)
+    - Support for nested object matching
+    - Exclusion support with `:not` modifier
+  - **MySQL8SchemaManager**: Automatic JSON column creation in MySQL 8+
+  - **JsonDatabaseFieldDefinition** trait: Extend custom schema managers with JSON support
 
 - **DBSmartEnum**: PHP 8.1+ enum support as database fields
   - Automatic enum value extraction from BackedEnum classes

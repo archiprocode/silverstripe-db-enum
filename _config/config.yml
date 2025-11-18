@@ -1,8 +1,26 @@
 ---
 Name: archipro-silverstripe-db-enum
+after:
+  name: '#databaseconnectors'
 ---
+# Register MySQL8SchemaManager for JSON field support
+SilverStripe\Core\Injector\Injector:
+  MySQLSchemaManager:
+    class: ArchiPro\Silverstripe\DBEnum\MySQL8SchemaManager
+
 # Automatically apply SmartFieldsExtension to all DataObjects
 # This provides automatic type casting for DBJson, DBSmartEnum, and DBSmartDatetime fields
 SilverStripe\ORM\DataObject:
   extensions:
     - ArchiPro\Silverstripe\DBEnum\SmartFieldsExtension
+
+---
+Name: archipro-silverstripe-db-enum-filters
+after:
+  name: '#coresearchfilters'
+---
+# Register JsonFilter for filtering JSON columns
+SilverStripe\Core\Injector\Injector:
+  DataListFilter.Json:
+    class: ArchiPro\Silverstripe\DBEnum\JsonFilter
+  JsonFilter: '%$DataListFilter.Json'

@@ -15,7 +15,7 @@ A comprehensive SilverStripe CMS module providing smart database field types wit
 ## Requirements
 
 - PHP 8.1 or higher
-- SilverStripe Framework 4.13+ or 5.0+
+- SilverStripe Framework 5.0+
 - MySQL 8.0+ (for DBJson support)
 
 ## Installation
@@ -361,25 +361,57 @@ App\Model\MyDataObject:
     - ArchiPro\Silverstripe\DBEnum\SmartFieldsExtension
 ```
 
-## Testing
+## Testing & Quality Assurance
 
-Run tests with:
+This module uses comprehensive static analysis and testing to ensure code quality:
+
+### Run Tests
 
 ```bash
+composer test
+# or
 vendor/bin/phpunit
 ```
 
-Run PHPStan analysis (with SilverStripe-specific rules via [silverstan](https://github.com/Cambis/silverstan)):
+### PHPStan Static Analysis
+
+The module uses PHPStan level 8 with [silverstan](https://github.com/Cambis/silverstan) for SilverStripe-specific type checking:
 
 ```bash
+composer phpstan
+# or
 vendor/bin/phpstan analyse
 ```
 
-Run code sniffer:
+### Code Style
 
 ```bash
+composer phpcs
+# or
 vendor/bin/phpcs src tests
 ```
+
+Auto-fix code style issues:
+
+```bash
+composer phpcbf
+```
+
+### Run All Checks
+
+Run linting, code style, PHPStan, and tests in one command:
+
+```bash
+composer check
+```
+
+### Type Safety Features
+
+- **PHPStan Level 8** - Strictest static analysis
+- **Silverstan Integration** - SilverStripe-specific type rules
+- **Full type hints** - All methods have explicit parameter and return types
+- **PHPDoc coverage** - Complete documentation with generic types
+- **Enhanced checks** - Uninitialized properties, dynamic properties, wide return types
 
 ## License
 

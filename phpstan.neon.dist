@@ -5,7 +5,15 @@ parameters:
   level: 8
   paths:
     - src
+    - tests
   treatPhpDocTypesAsCertain: false
   checkMissingIterableValueType: true
   checkGenericClassInNonGenericObjectType: true
   reportUnmatchedIgnoredErrors: true
+
+  # Enhanced type checking
+  checkExplicitMixedMissingReturn: true
+  checkPhpDocMissingReturn: true
+  checkTooWideReturnTypesInProtectedAndPublicMethods: true
+  checkUninitializedProperties: true
+  checkDynamicProperties: true

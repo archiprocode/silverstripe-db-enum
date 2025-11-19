@@ -41,7 +41,7 @@ class SmartFieldsExtension extends DataExtension
      * @param array<string,mixed> $cachedFieldValues Cached field values
      * @return mixed The potentially modified value
      */
-    public function updateFieldValue(string $fieldName, $value, array $cachedFieldValues)
+    public function updateFieldValue(string $fieldName, mixed $value, array $cachedFieldValues): mixed
     {
         // Check if this is a smart field type
         $dbConfig = $this->owner->config()->get('db');
@@ -104,7 +104,7 @@ class SmartFieldsExtension extends DataExtension
      * @param mixed $value
      * @return array<mixed>|null
      */
-    protected function castToArray($value): ?array
+    protected function castToArray(mixed $value): ?array
     {
         if ($value === null || $value === '') {
             return null;
@@ -132,7 +132,7 @@ class SmartFieldsExtension extends DataExtension
      * @param string $fieldType
      * @return \BackedEnum|string|null
      */
-    protected function castToEnum(string $fieldName, $value, string $fieldType)
+    protected function castToEnum(string $fieldName, mixed $value, string $fieldType): \BackedEnum|string|null
     {
         if ($value === null || $value === '') {
             return null;
@@ -182,7 +182,7 @@ class SmartFieldsExtension extends DataExtension
      * @param mixed $value
      * @return DBSmartDatetime|null
      */
-    protected function castToSmartDatetime($value): ?DBSmartDatetime
+    protected function castToSmartDatetime(mixed $value): ?DBSmartDatetime
     {
         if ($value === null || $value === '') {
             return null;
@@ -208,11 +208,9 @@ class SmartFieldsExtension extends DataExtension
      *
      * This is called before the value is set on the field.
      *
-     * @param string $fieldName The name of the field being set
-     * @param mixed $value The value being set
      * @return void
      */
-    public function onBeforeWrite()
+    public function onBeforeWrite(): void
     {
         parent::onBeforeWrite();
 

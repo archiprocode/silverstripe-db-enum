@@ -18,15 +18,11 @@ jobs:
         include:
           # SilverStripe 5
           - php: '8.1'
-            silverstripe: '~5.0'
+            silverstripe: '^5.0'
           - php: '8.2'
-            silverstripe: '~5.0'
+            silverstripe: '^5.0'
           - php: '8.3'
-            silverstripe: '~5.0'
-
-          # SilverStripe 4
-          - php: '8.1'
-            silverstripe: '^4.13'
+            silverstripe: '^5.0'
 
     services:
       mysql:

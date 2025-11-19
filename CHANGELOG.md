@@ -56,7 +56,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Requirements
 - PHP 8.1 or higher
-- SilverStripe Framework 4.13+ or 5.0+
+- SilverStripe Framework 5.0+
 - MySQL 8.0+ (for DBJson support)
+
+### Technical Excellence
+- **PHPStan level 8** with [silverstan](https://github.com/Cambis/silverstan) for comprehensive static analysis
+- **Full type safety** with strict type hints throughout the codebase
+- **Enhanced type checking** including uninitialized properties and dynamic properties
+- **100% PHPDoc coverage** with detailed parameter and return type annotations
+- Native PHP 8.1+ features (enums, union types, mixed types)
 
 [Unreleased]: https://github.com/archiprocode/silverstripe-db-enum/compare/main...HEAD
